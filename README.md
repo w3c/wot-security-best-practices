@@ -1,2 +1,2 @@
-# wot-security-best-practices
-Repository for the WoT Security Best Practices document
+# WoT Security Best Practices
+Repository for the WoT Security Best Practices document.
