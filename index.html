@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" href="tablestyle.css">
+    <meta charset="utf-8" />
+    <title>Web of Things (WoT) Security Best Practices</title>
+    <script class="remove" async="" src="https://www.w3.org/Tools/respec/respec-w3c-common"></script>
+    <script class="remove">
+          var respecConfig = {
+              specStatus:     "ED"
+            , noRecTrack:     "true"
+            , processVersion: 2017
+            , shortName:      "wot-security-best-practices"
+            , copyrightStart: 2017
+            , wg:             "Web of Things Working Group"
+            , wgURI:          "https://www.w3.org/WoT/WG/"
+            , wgPublicList:   "public-wot-wg"
+            , edDraftURI:     "https://w3c.github.io/wot-security-best-practices/"
+            , githubAPI:      "https://api.github.com/repos/w3c/wot-security-best-practices"
+            , issueBase:      "https://www.github.com/w3c/wot-security-best-practices/issues"
+            , editors: [
+                {
+                  name:       "Elena Reshetova"
+                , w3cid:      "99327"
+                , company:    "Intel Corp."
+                , companyURL: "https://www.intel.com/"
+                },
+                {
+                  name:       "Michael McCool"
+                , w3cid:      "93137"
+                , company:    "Intel Corp."
+                , companyURL: "https://www.intel.com/"
+                }
+              ]
+            , otherLinks: [
+                {
+                  key: "Contributors"
+                , data: [
+                    {
+                      value: "In the GitHub repository"
+                    , href: "https://github.com/w3c/wot-security-best-practices/graphs/contributors"
+                    }
+                  ]
+                }
+              , {
+                  key: "Repository",
+                  data: [
+                    {
+                      value: "We are on GitHub",
+                      href: "https://github.com/w3c/wot-security-best-practices/"
+                    }
+                  , {
+                      value: "File a bug",
+                      href: "https://github.com/w3c/wot-security-best-practices/issues"
+                    }
+                  , {
+                      value: "Contribute",
+                      href: "https://github.com/w3c/wot-security-best-practices/pulls"
+                    }
+                  ]
+                }
+              ]
+            , localBiblio: {
+                "CoRE-RD": {
+                  href: "https://tools.ietf.org/html/draft-ietf-core-resource-directory-11"
+                , title: "CoRE Resource Directory"
+                , status:    "Internet-Draft"
+                , publisher: "IETF"
+                , date: "03 July 2017"
+                },
+                "Ocf17": {
+                  href: "https://openconnectivity.org/specs/OCF_Security_Specification_v1.0.0.pdf"
+                , title: "The OCF Security Specification, version 1.0.0"
+                , publisher: "OCF"
+                , date: "June 2017"
+                },
+                "JWT15": {
+                  href: "https://tools.ietf.org/html/rfc7519"
+                , title: "JSON Web Token (JWT)"
+                , publisher: "IETF"
+                , date: "May 2015"
+                },
+                "CBOR17": {
+                  href: "https://tools.ietf.org/pdf/draft-ietf-ace-cbor-web-token-07.pdf"
+                , title: "CBOR Web Token (CWT)"
+                , status:    "Internet-Draft"
+                , publisher: "IETF"
+                , date: "June 2017"
+                },
+                "OSCOAP17": {
+                  href: "https://tools.ietf.org/pdf/draft-ietf-core-object-security-04.pdf"
+                , title: "Object Security of CoAP (OSCOAP)"
+                , status:    "Internet-Draft"
+                , publisher: "IETF"
+                , date: "July 2017"
+                },
+                "COSE17": {
+                  href: "https://tools.ietf.org/pdf/draft-ietf-cose-msg-24.pdf"
+                , title: "CBOR Object Signing and Encryption (COSE)"
+                , status:    "Internet-Draft"
+                , publisher: "IETF"
+                , date: "May 2017"
+                },
+                "Bel89": {
+                  authors: ["S. Bellovin"]
+                , href: "https://cseweb.ucsd.edu/classes/sp99/cse227/ipext.pdf"
+                , title: "Security Problems in the TCP-IP Protocol Suite"
+                , publisher: "Computer Communication Review, Vol. 19, No. 2" 
+                , pages: "32-48"
+                , date: "April 1989"
+                },
+                "Bel13": {
+                  authors: ["S. Bellovin"]
+	          , href: "https://csrc.nist.gov/csrc/media/events/workshop-on-improving-trust-in-the-online-marketpl/documents/presentations/bellovin_ca-workshop2013.pdf"
+                  , title: "Web Security in the Real World" 
+                  , publisher: "Workshop on Improving Trust in the Online Marketplace, NIST" 
+                  , date: "April 2013"
+                },
+                "Ber14": {
+                  authors: ["V. Bertocci"]
+                  , href: "http://www.cloudidentity.com/blog/2014/04/22/authentication-protocols-web-ux-and-web-api/"
+                  , title: "Authentication Protocols, Web UX and Web API" 
+                  , date: "April 2014"
+                },
+                "Bor14": {
+                  authors: ["C. Bormann", "et al."]
+                  , href: "https://tools.ietf.org/rfc/rfc7228.txt"
+                  , title: "Terminology for Constrained-Node Networks"
+                  , publisher: "IETF RFC 7228"
+                  , date: "May 2014"
+                },
+                "Bru14": {
+                  authors: ["C. Brubaker", "et al."]
+                  , href: "https://www.cs.utexas.edu/~shmat/shmat_oak14.pdf"
+                  , title: "Using Frankencerts for Automated Adversarial Testing of Certificate Validation in SSL/TLS Implementations"
+                  , publisher: "IEEE Security Privacy"
+                  , date: "2014"
+                  , pages: "114-129"
+                },
+                "Coo13": {
+                  authors: ["A. Cooper", "et al"]
+                  , href: "https://tools.ietf.org/html/rfc6973"
+                  , title: "Privacy Considerations for Internet Protocols"
+                  , publisher: "IETF RFC 6973 (IAB Guideline)"
+                  , date: "July 2013"
+                },
+                "Lea05": {
+                  authors: ["P. Leach", "et al"]
+                  , href: "https://tools.ietf.org/html/rfc4122"
+                  , title: "A Universally Unique IDentifier (UUID) URN Namespace"
+                  , publisher: "IETF RFC 4122"
+                  , date: "July 2005"
+                },
+                "Dur13": {
+                  authors: ["Z. Durumeric", "et al."]
+                  , href: "https://conferences.sigcomm.org/imc/2013/papers/imc257-durumericAemb.pdf"
+                  , title: "Analysis of the HTTPS Certificate Ecosystem"
+                  , publisher: "Proc. of the 2013 conference on Internet measurement conference"
+                  , date: "October 2013"
+                },
+                "Ell00": {
+                  authors: ["C. Ellison", "B. Schneier"]
+                  , href: "https://www.schneier.com/paper-pki.pdf"
+                  , title: "Ten Risks of PKI: What You’re not Being Told about Public Key Infrastructure"
+                  , publisher: "Computer Security Journal, v 16, n 1,"
+                  , date: "2000"
+                  , pages: "1-7"
+                },
+                "Fu01": {
+                  authors: ["K. Fu", "et al."]
+                  , href: "https://pdos.csail.mit.edu/papers/webauth:sec10.pdf"
+                  , title: "Dos and Don’ts of Client Authentication on the Web"
+                  , publisher: "Proc. 10th USENIX Security Symposium"
+                  , date: "August 2001"
+                },
+                "Garcia17": {
+                  authors: ["O. Garcia-Morchon", "S. Kumar", "M. Sethi"]
+                  , title: "State-of-the-Art and Challenges for the Internet of Things Security"
+                  , href: "https://datatracker.ietf.org/doc/draft-irtf-t2trg-iot-seccons/"
+                },
+                "Geo12": {
+                  authors: ["M. Georgiev", "et al."]
+                  , href: "https://www.cs.utexas.edu/~shmat/shmat_ccs12.pdf"
+                  , title: "The Most Dangerous Code in the World: Validating SSL Certificates in Non-Browser Software"
+                  , publisher: "Proc. of the 2012 ACM conference on Computer and communications security"
+                  , date: "2012"
+                  , pages: "38-49"
+                },
+                "Gol03": {
+                  authors: ["O. Goldreich"]
+                  , href: "http://www.wisdom.weizmann.ac.il/~oded/foc-sur01.html"
+                  , title: "Cryptography and Cryptographic Protocols"
+                  , publisher: "Distributed Computing, vol. 16"
+                  , pages: "177-199"
+                  , date: "2003"
+                }, 
+                "Gre14": {
+                  authors: ["M. Green"]
+                  , href: "https://blog.cryptographyengineering.com/2014/03/19/how-do-you-know-if-rng-is-working/"
+                  , title: "How do you know if an RNG is working?"
+                  , date: "March 2014"
+                },
+                "Gut02": {
+                  authors: ["P. Gutman"]
+                  , href: "https://www.cs.auckland.ac.nz/~pgut001/pubs/notdead.pdf"
+                  , title: "PKI: It’s Not Dead, Just Resting"
+                  , publisher: "IEEE Computer, vol. 35, no. 8"
+                  , date: "Aug. 2002"
+                  , pages: "41-49"
+                },
+                "Hea13": {
+                  authors: ["M. Hearn"]
+                  , href: "https://googleblog.blogspot.de/2013/02/an-update-on-our-war-against-account.html"
+                  , title: "An update on our war against account hijackers"
+                  , date: "Feb 2013"
+                },
+                "IETFACE": {
+                  title: "IETF Authentication and Authorization for Constrained Environments (ACE)"
+                  , href: "https://tools.ietf.org/wg/ace/"
+                },
+                "Iic15": {
+                  authors: ["Industrial Internet Consortium"]
+                  , href: "http://www.iiconsortium.org/IIRA.htm"
+                  , title: "Industrial Internet Reference Architecture"
+                  , date: "June 2015"
+                },
+                "IicRA17": {
+                  authors: ["Industrial Internet Consortium"]
+                  , href: "https://www.iiconsortium.org/IIRA.htm"
+                  , title: "The Industrial Internet of Things Volume G1: Reference Architecture"
+                  , publisher: "IIC:PUB:G1:V1.80:20170131"
+                  , date: "Jan 2017"
+                },
+                "IicSF16": {
+                  authors: ["Industrial Internet Consortium"]
+                  , href: "https://www.iiconsortium.org/IISF.htm"
+                  , title: "The Industrial Internet of Things Volume G4: Security Framework"
+                  , publisher: "IIC:PUB:G4:V1.0:PB:20160926"
+                  , date: "Sept 2016"
+                },
+                "ISF17": {
+                  authors: ["IoT Security Foundation"]
+                  , href: "https://iotsecurityfoundation.org/best-practice-guidelines/"
+                  , title: "IoT Security Foundation Best Practice Guidelines"
+                  , date: "May 2017"
+                },
+                "Jon14": {
+                  authors: ["M. Jones"]
+                  , href: "http://www.niso.org/sites/default/files/stories/2017-08/SP_Jones_JSON_isqv26no3.pdf"
+                  , title: "A JSON-Based Identity Protocol Suite"
+                  , publisher: "Information Standards Quarterly, vol. 26, no. 3"
+                  , date: "2014"
+                  , pages: "19–22"
+                },
+                "Ken03": {
+                  authors: ["S. Kent", "L. Millet"]
+                  , href: "https://www.nap.edu/read/10656/chapter/1"
+                  , title: "Who Goes There? Authentication Through the Lens of Privacy"
+                  , publisher: "The National Academies Press, Washington D.C."
+                  , date: "2003"
+                },
+                "Lam04": {
+                  authors: ["B. Lampson"]
+                  , href: "https://pdfs.semanticscholar.org/6fe5/ba7a096e391d985e7818fef9d0f0636210a0.pdf"
+                  , title: "Computer Security in the Real World"
+                  , publisher: "IEEE Computer, vol. 37, no. 6"
+                  , date: "June 2004"
+                  , pages: "37-46"
+                },
+                "Loc05": {
+                  authors: ["H. Lockhart"]
+                  , href: "http://www.oracle.com/technetwork/testcontent/saml-084342.html"
+                  , title: "Demystifying SAML"
+                  , date: "May 2005"
+                },
+                "Mel15": {
+                  authors: ["D. Melzer"]
+                  , href: "https://c.ymcdn.com/sites/www.issa.org/resource/resmgr/journalpdfs/feature0615.pdf"
+                  , title: "Securing the Industrial Internet of Things"
+                  , date: "June 2015"
+                },
+                "Mic17": {
+                  authors: ["Microsoft"]
+                  , href: "https://docs.microsoft.com/en-us/azure/iot-suite/iot-security-architecture"
+                  , title: "Internet of Things security architecture"
+                  , publisher: "STRIDE threat model for IoT"
+                  , date: "Jan 2017"
+                },
+                "Moo02": {
+                  authors: ["T. Moors"]
+                  , href: "https://www.csd.uoc.gr/~hy435/material/moors.pdf"
+                  , title: "A critical review of End-to-end arguments in system design"
+                  , publisher: "Proc. of the IEEE International Conference on Communications"
+                  , date: "2002"
+                },
+                "Nis15": {
+                  authors: ["NIST"] 
+                  , title: "Guide to Industrial Control Systems (ICS) Security"
+                  , publisher: "NIST Special Publication 800-82"
+                },
+                "Oos10": {
+                  authors: ["M. Oosdijk", "et al."]
+                  , href: "https://tnc2011.terena.org/getfile/696"
+                  , title: "Provisioning scenarios in identity federations"
+                  , publisher: "Surfnet Research Paper" 
+                  , date: "2010"
+                },
+                "Owa17": {
+                  authors: ["OWASP"]
+                  , href: "https://www.owasp.org/index.php/Threat_Risk_Modeling"
+                  , title: "Threat Risk Modeling"
+                  , publisher: "OWASP"
+                  , date: "Jan 2017"
+                },
+                "Res03": {
+                  authors: ["E. Rescorla", "et al."]
+                  , href: "https://tools.ietf.org/html/rfc3552"
+                  , title: "Guidelines for Writing RFC Text on Security Considerations"
+                  , publisher: "IETF RFC 3552 (IAB Guideline)"
+                  , date: "2003"
+                },
+                "Sch14": {
+                  authors: ["B. Schneier"]
+                  , href: "https://www.wired.com/2014/01/theres-no-good-way-to-patch-the-internet-of-things-and-thats-a-huge-problem/"
+                  , title: "The Internet of Things Is Wildly Insecure — And Often Unpatchable"
+                  , publisher: "Wired"
+                  , date: "Jan. 2014"
+                },
+                "Sch99": {
+                  authors: ["B. Scheier", "A. Shostack"]
+                  , href: "https://www.schneier.com/paper-smart-card-threats.pdf"
+                  , title: "Breaking Up Is Hard To Do: Modeling Security Threats for Smart Cards"
+                  , publisher: "USENIX Workshop on Smart Card Technology, USENIX Press"
+                  , date: "1999"
+                  , pages: "175-185"
+                },
+                "She14": {
+                  authors: ["Z. Shelby", "et al."]
+                  , href: "https://tools.ietf.org/rfc/rfc7252.txt"
+                  , title: "The Constrained Application Protocol (CoAP)"
+                  , publisher: "IETF RFC 7252"
+                  , date: "June 2014"
+                 },
+                "Vol00": {
+                  authors: ["J. Vollbrecht", "et al."]
+                  , href: "https://tools.ietf.org/rfc/rfc2904.txt"
+                  , title: "AAA Authorization Framework"
+                  , publisher: "IETF RFC 2904"
+                  , date: "Aug. 2000"
+                },
+                "Yeg11": {
+                  authors: ["S. Yegge"]
+                  , href: "https://plus.google.com/+RipRowan/posts/eVeouesvaVX"
+                  , title: "Stevey's Google Platforms Rant"
+                  , publisher: "Blog"
+                  , date: "Oct. 2011"
+                }
+              }
+            };
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
+     <p>
+     This document provides non-normative guidance on 
+     how to implement Web of Things (WoT) using best practices 
+     for security and privacy.
+     </p>
+    </section>
+
+    <section id="sotd">
+      <p class="ednote" title="The W3C WoT WG is asking for feedback">
+        Please contribute to this draft using the 
+        <a href="https://github.com/w3c/wot-security-best-practices/issues">GitHub Issue</a> 
+        feature of the <a href="https://github.com/w3c/wot-security-best-practices/">WoT 
+        Security Testing Plan</a> repository.
+      </p>
+    </section>
+
+    <section>
+      <h1>Introduction</h1>
+      <p>
+        For a general discussion of WoT security and privacy issues, see the  
+	<a href="https://www.w3.org/TR/2018/NOTE-wot-security-20181203/">WoT 
+        Security and Privacy Considerations</a> document.
+      </p>
+      <p>For details on the Web of Things architecture, please refer to the following:
+      <ul>
+        <li>the <a href="https://www.w3.org/WoT/IG/">Interest Group</a> web site</li>
+        <li>the <a href="https://www.w3.org/WoT/WG/">Working Group</a> web site</li>
+	<li>the <a href="https://www.w3.org/TR/2017/WD-wot-architecture-20170914/">WoT Architecture</a> 
+            document,</li>
+        <li>the <a href="https://www.w3.org/TR/2017/WD-wot-thing-description-20170914/">WoT Thing Description</a> 
+            document,</li>
+        <li>the <a href="https://w3c.github.io/wot-binding-templates/">WoT Binding Templates</a> 
+            document, and</li>
+        <li>the <a href="https://www.w3.org/TR/2017/WD-wot-scripting-api-20170914/">WoT Scripting API</a> 
+            document.</li>
+      </ul>
+      </p>
+    </section>
+
+    <section>
+      <h1>Secure Transport</h1>
+      <p>In general, the recommendation is to use the latest version of
+      TLS and DTLS available, consistent with interoperability requirements.
+      Currently, the latest version of TLS is 1.3 but as this is not yet
+      widely deployed, for interoperability a system may have to be based on 
+      TLS 1.2.  However, as TLS 1.3 addresses several vulnerabilities a migration
+      plan should be in place to TLS 1.3.
+      </p>
+      <p>Ideally systems would implement the following for each of the given protocols:
+      <dl>
+        <dt>HTTPS:</dt><dd><p>HTTP + TLS 1.3</p></dd> 
+        <dt>CoAPS:</dt><dd><p>CoAP + DTLS.  See also:
+        <ul>
+          <li><a href="https://tools.ietf.org/html/rfc7925">IETF RFC7925:</a> 
+                  Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS)
+                  Profiles for the Internet of Things</li>
+          <li><a href="https://tools.ietf.org/html/rfc7252">IETF RFC7252:</a>
+                  The Constrained Application Protocol (CoAP)</li>
+        </ul></p></dd>
+        <dt>MQTTS:</dt><dd><p>MQTT + TLS 1.3.  See also:
+        <ul>
+          <li><a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=mqtt">
+            OASIS Message Queuing Telemetry Transport (MQTT) TC</a></li>
+          <li><a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=mqtt-security">
+            MQTT Security Subcommittee</a></li> 
+          <li>Standard URL scheme for "mqtts://..." (TODO: cite draft IETF RFC for URL scheme)</li>
+        </ul></p></dd>
+      </dl>
+    </section>
+
+    <section>
+      <h1>Authentication and Access Control</h1>
+      <ul>
+      <li>HTTPS with one of oauth2, bearer, basic, or digest security schemes.</li>
+      <li>CoAPS with one of psk, public, or cert security schemes.</li>
+      <li>MQTTS with basic AND psk (MQTT native username/password with psk for encrypted communication)</li>
+      </ul>
+      <p>In addition, TDs with HTTP/nosec and CoAP/nosec should be tested and properly handled.
+      They are useful in conjunction with proxies that layer on one of the above secure
+      transport and authentication schemes.
+      </p>
+    </section>
+
+    <section>
+      <h1>Thing Directories</h1>
+      <p>Under discussion.  Issues:
+      <ul>
+      <li>Appropriate mechanisms</li>
+      <li>Threat(s)</li> 
+      <li>Management of consent</li>
+      <li>Private vs. public access</li>
+      <li>Basic: protected with basic or digest auth and HTTPS</li>
+      <li>Better: token or cert protection with credential server</li>
+      <li>Consider signed TDs - pros and cons</li>
+      <li>Threat: compromise of TD server</li> 
+      </ul>
+      </p>
+    </section>
+
+    <section>
+      <h1>Object Security</h1>
+      <p>Recommended if CoAP or MQTT to HTTP gateway is used that translates payloads.
+      Ideally however you would NOT translate the payload but use end-to-end security.
+      It is also important to still use with TLS and DTLS; object security alone
+      is generally insufficient.
+      The main advantage of object security is that a compromise Gateway will be 
+      prevented from modifying payloads.  
+      </p>
+      <ul>
+      <li>COSE</li> 
+      <li>OSCORE</li>
+      <li>OSCOAP</li>
+      </ul>
+   </section>
+
+    <section>
+      <h1>Secure Update and Post Manufacturing Provisioning</h1>
+   </section>
+
+    <section>
+      <h1>Terminology</h1>
+      <p>
+        Please refer to the 
+	<a href="https://www.w3.org/TR/2017/WD-wot-architecture-20170914/#terminology">WoT Architecture</a> 
+	document for terminology definitions.
+      </p>
+    </section>
+
+    <section>
+      <h1>Summary</h1>
+    </section>
+    <!--<section class="appendix remove">
+      <h2>Acknowledgements</h2>
+      <p> @TODO decide whether needed... </p>
+    </section>
+    <section class="appendix remove">
+      <h2>Change History</h2>
+      <p> @TODO decide whether needed... </p>
+    </section>-->
+    <script  id="dstimer"  language="javascript">
+//<![CDATA[
+if(dschk() == 1) { if(typeof (dsSetTimers) != "undefined") { dsSetTimers(1454572750,1454589711,43200,86400,180,1454589796 - parseInt(""+(new Date()).getTime()/1000),1);}}
+//]]>
+    </script>
+  </body>
+</html>
