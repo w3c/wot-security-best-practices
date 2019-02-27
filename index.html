@@ -365,6 +365,7 @@
      This document provides non-normative guidance on 
      how to implement Web of Things (WoT) using best practices 
      for security and privacy.
+     When doing security testing, use of these best practices is assumed.
      </p>
     </section>
 
@@ -406,8 +407,10 @@
       TLS and DTLS available, consistent with interoperability requirements.
       Currently, the latest version of TLS is 1.3 but as this is not yet
       widely deployed, for interoperability a system may have to be based on 
-      TLS 1.2.  However, as TLS 1.3 addresses several vulnerabilities a migration
-      plan should be in place to TLS 1.3.
+      TLS 1.2.  
+      However, as TLS 1.3 addresses several vulnerabilities in TLS 1.2 
+      in general a migration plan should be in place to TLS 1.3 and new
+      implementations should target TLS 1.3 if possible.
       </p>
       <p>Ideally systems would implement the following for each of the given protocols:
       <dl>
@@ -426,58 +429,103 @@
             OASIS Message Queuing Telemetry Transport (MQTT) TC</a></li>
           <li><a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=mqtt-security">
             MQTT Security Subcommittee</a></li> 
-          <li>Standard URL scheme for "mqtts://..." (TODO: cite draft IETF RFC for URL scheme)</li>
+          <li>Standard URL scheme for "mqtts://..." 
+              (Note: a draft IETF RFC for the MQTT URL scheme is being discussed)</li>
         </ul></p></dd>
       </dl>
     </section>
 
     <section>
       <h1>Authentication and Access Control</h1>
+      <p>
+      The best practices for authentication and access control depend on the protocol.
+      In most cases, authentication schemes should only be considered 
+      secure when used in combination with secure transport.
+      We recommend the following combinations:
       <ul>
       <li>HTTPS with one of oauth2, bearer, basic, or digest security schemes.</li>
       <li>CoAPS with one of psk, public, or cert security schemes.</li>
       <li>MQTTS with basic AND psk (MQTT native username/password with psk for encrypted communication)</li>
       </ul>
+      </p>
       <p>In addition, TDs with HTTP/nosec and CoAP/nosec should be tested and properly handled.
       They are useful in conjunction with proxies that layer on one of the above secure
       transport and authentication schemes.
+      </p>
+      <p>"Local HTTPS" is still a topic of discussion.  In addition to the above schemes,
+      using HTTPS with psk, public, or cert schemes to share keys to be used for TLS transport
+      is also acceptable for machine-to-machine communication.  However, currently such schemes may
+      require the user to manually install or accept keys or certificates when using a browser.
       </p>
     </section>
 
     <section>
       <h1>Thing Directories</h1>
-      <p>Under discussion.  Issues:
-      <ul>
-      <li>Appropriate mechanisms</li>
-      <li>Threat(s)</li> 
-      <li>Management of consent</li>
-      <li>Private vs. public access</li>
-      <li>Basic: protected with basic or digest auth and HTTPS</li>
-      <li>Better: token or cert protection with credential server</li>
-      <li>Consider signed TDs - pros and cons</li>
-      <li>Threat: compromise of TD server</li> 
-      </ul>
+      <p>Directory services are often used in WoT systems to store TDs and provide discovery
+      services.  This is especially useful for devices that need to sleep to conserve battery
+      life.  Rather than watching for and responding to discovery requests themselves, they
+      can register their TDs with a directory service which can then respond on their behalf.
+      Directories can either run locally on a gateway (behind a firewall, on the same
+      local network as the devices) or in the cloud (with globally visible URLs).  The security
+      considerations and discovery mechanisms are a little different for these two cases.
+      Unfortunately directory services have not (yet) been standardized so our recommendations 
+      here are general.
+      </p>
+      <p>A globally accessible directory service will act much like other 
+      web services.  It will be available at a "well-known" URL that will have to be configured
+      by the user.  Registration of devices will have to be associated with a particular user
+      and use of the service will have to be protected by authentication and confidentiality
+      mechanisms, such as HTTPS combined with one of the authentication mechanisms listed above.
+      The directory service should avoid doing any processing for unauthenticated
+      connection attempts in order to protect itself from DoS attacks.
+      </p>
+      <p>Local directory services may also offer a web interface but may also advertise their
+      availability using mDNS/Zeroconf.  Authentication and confidentiality for a local service
+      can also be secured via HTTPS although the issues of "local HTTPS" also arise for such
+      services; in general, the user may have to "on-board" devices using some kind of 
+      pairing approach.  If the local service is located on a network located behind a firewall
+      it is possible to depend on link-layer encryption such as WPA2 although this is not
+      as secure as transport-layer security using TLS.
+      </p><p>
+      Registering a device's TD with a directory service is also a suitable time to
+      capture user consent for the distribution of the TD and the data from the device.
+      Such consent should include appropriate limits on who can access the data and for 
+      how long it can be retained.
+      Also, since personally-identifiable information can be inferred from TDs,
+      TDs should themselves be treated as personally-identifiable information and suitably
+      protected.  This means that directories should generally only provide TDs via
+      mutually-authenticated channels to users that are authorized to access those TDs.
       </p>
     </section>
 
     <section>
       <h1>Object Security</h1>
-      <p>Recommended if CoAP or MQTT to HTTP gateway is used that translates payloads.
-      Ideally however you would NOT translate the payload but use end-to-end security.
-      It is also important to still use with TLS and DTLS; object security alone
+      <p>Object security is recommended if a CoAP or MQTT to HTTP gateway is used that 
+      translates protocols.  
+      Ideally however you would NOT translate the payload itself but use end-to-end security.
+      It is also important to still use object security with TLS and DTLS; object security alone
       is generally insufficient.
-      The main advantage of object security is that a compromise Gateway will be 
+      The main advantage of object security is that a compromised Gateway will be 
       prevented from modifying payloads.  
+      </p><p>
+      Example object-security standards to consider are COSE, OSCORE, and OSCOAP. 
       </p>
-      <ul>
-      <li>COSE</li> 
-      <li>OSCORE</li>
-      <li>OSCOAP</li>
-      </ul>
    </section>
 
     <section>
       <h1>Secure Update and Post Manufacturing Provisioning</h1>
+      <p>The WoT is primarily concerned with the operational phase of devices.
+      It is assumed that devices and other components of a WoT system (gateways, for example)
+      start the operational phase in a secure state.  WoT best practices are focused
+      on keeping devices and services in a secure state staring from this assumption.
+      However, to enter operational state in secure fashion, additional best practices
+      need to be followed during manufacturing, deployment and provisioning, and best
+      practices should also be followed for secure update.
+      </p><p>
+      Good references for best practices for secure update and provisioning
+      are the IIC Security Framework [[IICSF]] and the IoT Security Foundation's
+      guidelines [[IoTSF]].
+      </p>
    </section>
 
     <section>
