@@ -4,7 +4,8 @@ W3C Web of Things (WoT) Security Best Practices document.
 This is currently a work in progress and should not be cited as an
 authoritative source.
 
-* [WoT Security Best Practices](index.html): A set of suggestions on 
+* [WoT Security Best Practices](https://w3c.github.io/wot-security-best-practices/):
+A set of suggestions on 
 how WoT systems can be implemented to support security and privacy.
 
 If you are viewing this on github, you may have to download and save to
