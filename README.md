@@ -1,4 +1,10 @@
 # WoT Security Best Practices
+[![Follow on Twitter](https://img.shields.io/twitter/follow/W3C_WoT.svg?label=follow+W3C_WoT)](https://twitter.com/W3C_WoT)
+[![Stack Exchange questions](https://img.shields.io/stackexchange/stackoverflow/t/web-of-things?style=plastic)]( https://stackoverflow.com/questions/tagged/web-of-things)
+
+General information about the Web of Things can be found on https://www.w3.org/WoT/.
+  
+---
 This is the repository for the 
 W3C Web of Things (WoT) Security Best Practices document.
 This is currently a work in progress and should not be cited as an
