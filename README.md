@@ -13,10 +13,11 @@ authoritative source.
 * [WoT Security Best Practices](https://w3c.github.io/wot-security-best-practices/):
 A set of suggestions on 
 how WoT systems can be implemented to support security and privacy.
+* A rendered version can be found [here](https://w3c.github.io/wot-security-best-practices/).
 
 If you are viewing this on github, you may have to download and save to
 a local directory before opening it in a web browser for it to render
-properly.
+completely.
 
 If you wish to make a contribution,
 please be aware that since the master is being linked from other WoT documents
