@@ -15,7 +15,7 @@
             , group:          "wg/wot"
             , edDraftURI:     "https://w3c.github.io/wot-security-best-practices/"
             , githubAPI:      "https://api.github.com/repos/w3c/wot-security-best-practices"
-            , issueBase:      "https://www.github.com/w3c/wot-security-best-practices/issues"
+            , issueBase:      "https://www.github.com/w3c/wot-security-best-practices/issues/"
             , editors: [
                 {
                   name:       "Elena Reshetova"
@@ -488,15 +488,23 @@
       For devices on local networks, keys can be assigned during the onboarding process, but a mechanism
       to establish the identities of endpoints is also needed.  
       </p><p>
-      See 
+      See the following ITRF/IETF references:
+      <a href="https://datatracker.ietf.org/doc/html/draft-sarikaya-t2trg-sbootstrapping">Terminology and processes for initial security setup of IoT devices</a>,
       <a href="https://www.ietf.org/id/draft-nordmark-iotops-onboarding-00.html">Different Aspects of Onboarding for IoT/Edge Devices</a>,
-      BRSKI, 
-      DID/VC, 
-      Anima,
+      <a href="https://datatracker.ietf.org/doc/html/rfc8995">BRSKI</a>,
       and
-      <a href="https://datatracker.ietf.org/doc/html/draft-sarikaya-t2trg-sbootstrapping">https://datatracker.ietf.org/doc/html/draft-sarikaya-t2trg-sbootstrapping</a>.
+      <a href="https://datatracker.ietf.org/doc/html/rfc8257">SZTP</a>.
+      Some related work in the W3C is also relavant, in particular
+      <a href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DID)</a> and
+      <a href="https://www.w3.org/TR/vc-data-model/">Verifiable Credentials (VC)</a>.
       </p>
-      <p class="issue" data-number="29">
+      <p class="issue" data-number="29" title="Scripting API Issues Related to Security">
+      The WoT Scripting API needs to establish a secure environment for a script to run in and also needs to
+      expose and consume secure network endpoints.  
+      Several of the 
+      <a href="https://github.com/w3c/wot-security-best-practices/issues/29">open issues in the WoT Scripting API</a>
+      depend on the need for
+      secure onboarding, specifically the provision and management of keys and identities.
       </p>
     </section>
 
