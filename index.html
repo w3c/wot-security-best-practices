@@ -15,7 +15,7 @@
             , group:          "wg/wot"
             , edDraftURI:     "https://w3c.github.io/wot-security-best-practices/"
             , githubAPI:      "https://api.github.com/repos/w3c/wot-security-best-practices"
-            , issueBase:      "https://www.github.com/w3c/wot-security-best-practices/issues"
+            , issueBase:      "https://www.github.com/w3c/wot-security-best-practices/issues/"
             , editors: [
                 {
                   name:       "Elena Reshetova"
@@ -401,6 +401,12 @@
 
     <section>
       <h1>Secure Transport</h1>
+      <p>Secure transport is the foundation of many other security mechanisms, which are 
+      vulnerable if it is not used.  For example, basic/digest passports and bearer tokens
+      (used in OAuth2) can be intercepted by attackers on the network if transport is not encrypted.
+      Enabling secure transport is essential despite the challenges of using it
+      especially in isolated or local networks.
+      </p>
       <p>In general, the recommendation is to use the latest version of
       TLS and DTLS available, consistent with interoperability requirements.
       Currently, the latest version of TLS is 1.3 but as this is not yet
@@ -410,7 +416,7 @@
       in general a migration plan should be in place to TLS 1.3 and new
       implementations should target TLS 1.3 if possible.
       </p>
-      <p>Ideally systems would implement the following for each of the given protocols:
+      <p>Systems should implement the following for each of the given protocols:
       <dl>
         <dt>HTTPS:</dt><dd><p>HTTP + TLS 1.3</p></dd> 
         <dt>CoAPS:</dt><dd><p>CoAP + DTLS.  See also:
@@ -433,17 +439,73 @@
       </dl>
 
       <section id="secure-transport-local">
-        <h2>Local networks</h2>
-        In order to secure HTTP and COAP with TLS/DTLS in local networks, we highly recommend 
+        <h2>Global Networks</h2>
+        <p>To do.  Use of public URLs, certificates, and CA.
+	<p>
+     </section>
+
+      <section id="secure-transport-local">
+        <h2>Offline and Local Networks</h2>
+	<p>We define a local network as one in which not all endpoints are visible to the rest of the internet.
+	This can include both fully offline isolated networks, such as those often used for factory automation,
+	and networks behind a NAT or firewall, as are common for home or business networks.  In these cases,
+	establishing the identity of endpoints based on publically visible URLs and the CA system is not 
+	possible.
+	</p><p>In order to secure HTTP and COAP with TLS/DTLS in local networks, we highly recommend 
         the usage of TLS 1.3 with Raw Public Keys as specified in <a href="https://datatracker.ietf.org/doc/html/rfc8446">RFC8446</a> and 
         <a href="https://datatracker.ietf.org/doc/html/rfc7250">RFC7250</a>.
-	      
-	<div class="ednote" title="Local Security Best Practices Under Discussion">
+	However, the keys still need to be assigned and the identities of endpoints established.
+	In local networks, this should be accomplished using an onboarding process, discussed in the next section.
+	</p>
+	<p class="ednote" title="Local Security Best Practices Under Discussion">
 		Best practices for local security are still
 		<a href="https://github.com/w3c/wot-security-best-practices/issues/13">under discussion.</a>
-	 </div>
+	 </p>
+	</p><p>
+	Unfortunately it may not be possible in general to use some useful consumers, in particular browsers, 
+	with this infrastructure.  The best option is to include client devices in the onboarding practice
+	and register a certificate that the browser can use.  This is the only option for fully isolated networks.
+	The second best option, usable only for segmented networks with a NAT and/or firewall, is to expose a limited
+	number of secure endpoints, for example a "dashboard" service on a home hub, to the internet, and give
+	it a public URL and certificate.  This can be accomplished using either STUN/TURN to set up a tunnel
+	through the NAT and a system such as DynDNS to establish the public IP, or a cloud-based (reverse) proxy.
+	Of course such exposed endpoints should have strong authentication
+	requirements (OAuth2 is recommended).  Individual IoT devices in such a system should generally
+	not be directly exposed to the internet.
+        </p>
       </section>
       
+    </section>
+
+    <section>
+      <h1>Onboarding</h1>
+      <p>Onboarding is the process of establishing trust with new endpoints in a network, which includes
+      establishing a way to confirm their identities and establishing a mechanism to share encryption keys.
+      This process is essential in order to establish secure transport between endpoints.
+      For systems that are globally visible on the internet, the CA (Certificate Authority) service can
+      be considered an onboarding process that assigns certificates to endpoints.  The URL used to access
+      endpoints then becomes the endpoints' identity, and is encrypted into the certificate that is provided.
+      For devices on local networks, keys can be assigned during the onboarding process, but a mechanism
+      to establish the identities of endpoints is also needed.  
+      </p><p>
+      See the following ITRF/IETF references:
+      <a href="https://datatracker.ietf.org/doc/html/draft-sarikaya-t2trg-sbootstrapping">Terminology and processes for initial security setup of IoT devices</a>,
+      <a href="https://www.ietf.org/id/draft-nordmark-iotops-onboarding-00.html">Different Aspects of Onboarding for IoT/Edge Devices</a>,
+      <a href="https://datatracker.ietf.org/doc/html/rfc8995">BRSKI</a>,
+      and
+      <a href="https://datatracker.ietf.org/doc/html/rfc8257">SZTP</a>.
+      Some related work in the W3C is also relavant, in particular
+      <a href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DID)</a> and
+      <a href="https://www.w3.org/TR/vc-data-model/">Verifiable Credentials (VC)</a>.
+      </p>
+      <p class="issue" data-number="29" title="Scripting API Issues Related to Security">
+      The WoT Scripting API needs to establish a secure environment for a script to run in and also needs to
+      expose and consume secure network endpoints.  
+      Several of the 
+      <a href="https://github.com/w3c/wot-security-best-practices/issues/29">open issues in the WoT Scripting API</a>
+      depend on the need for
+      secure onboarding, specifically the provision and management of keys and identities.
+      </p>
     </section>
 
     <section>
