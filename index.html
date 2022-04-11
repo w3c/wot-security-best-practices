@@ -72,33 +72,6 @@
                 , publisher: "OCF"
                 , date: "June 2017"
                 },
-                "JWT15": {
-                  href: "https://tools.ietf.org/html/rfc7519"
-                , title: "JSON Web Token (JWT)"
-                , publisher: "IETF"
-                , date: "May 2015"
-                },
-                "CBOR17": {
-                  href: "https://tools.ietf.org/pdf/draft-ietf-ace-cbor-web-token-07.pdf"
-                , title: "CBOR Web Token (CWT)"
-                , status:    "Internet-Draft"
-                , publisher: "IETF"
-                , date: "June 2017"
-                },
-                "OSCOAP17": {
-                  href: "https://tools.ietf.org/pdf/draft-ietf-core-object-security-04.pdf"
-                , title: "Object Security of CoAP (OSCOAP)"
-                , status:    "Internet-Draft"
-                , publisher: "IETF"
-                , date: "July 2017"
-                },
-                "COSE17": {
-                  href: "https://tools.ietf.org/pdf/draft-ietf-cose-msg-24.pdf"
-                , title: "CBOR Object Signing and Encryption (COSE)"
-                , status:    "Internet-Draft"
-                , publisher: "IETF"
-                , date: "May 2017"
-                },
                 "Bel89": {
                   authors: ["S. Bellovin"]
                 , href: "https://cseweb.ucsd.edu/classes/sp99/cse227/ipext.pdf"
@@ -1074,7 +1047,10 @@
       The main advantage of object security is that a compromised Gateway will be 
       prevented from modifying payloads.  
       </p><p>
-      Example object-security standards to consider are COSE, OSCORE, and OSCOAP. 
+      Example object-security standards to consider are
+      <abbr title="CBOR Object Signing and Encryption">COSE</abbr> [[RFC8152]], and
+      <abbr title="Object Security for Constrained RESTful Environments">OSCORE</abbr>
+      [[RFC8613]].
       </p>
    </section>
 
